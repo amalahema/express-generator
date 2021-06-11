@@ -1,12 +1,11 @@
 var createError = require('http-errors');
-var express = require('express');
+var express = require('express');//express generator
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index');//experss framework 
+var usersRouter = require('./routes/users');//express framework
 var dishRouter  = require('./routes/dishRouter');
 var promotionRouter  = require('./routes/promotionRouter');
 var leaderRouter  = require('./routes/leaderRouter');
