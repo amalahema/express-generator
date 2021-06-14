@@ -1,12 +1,12 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
-const Dishes = require('../models/dishes');
-
-const dishRouter = express.Router();
+const express = require('express');//webframework used to handle all requests
+const bodyParser = require('body-parser');//middleware module
+const mongoose = require('mongoose');//Nosql database(document and horizontal)
+const Dishes = require('../models/dishes');//schema
+const dishRouter = express.Router();//express function exported to leaderRouter
 dishRouter.use(bodyParser.json());
+
 //end point to get the collections of dishes
+
 dishRouter.route('/')
 .get((_req,res,next) => {                                //all the dishes to be returened as client's request
     Dishes.find({})
