@@ -14,10 +14,10 @@ const commentSchema = new Schema({
         type: String,
         required: true
     },
-    "author":  {
-        type: String,
-        required: true
-    }
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }//author field turn in tothe reference to the user document(Relations in sql)
 }, {
     timestamps: true
 });
