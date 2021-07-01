@@ -21,7 +21,7 @@ dishRouter.route('/')
     .catch((err) => next(err));
 })
 //authenticate.verifyUser midddleware exported form authentiact.js file that is used to deny the operations for the unauthorized user
-.post(authenticate.verifyUser,(req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin,(req, res, next) => {
     Dishes.create(req.body)                             //the request body passed as a parameter to my dishes.create method and handle the return value
     .then((dish) => {
         console.log('Dish Created ', dish);             //dish is the return value
@@ -31,11 +31,11 @@ dishRouter.route('/')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(authenticate.verifyUser,(req, res, next) => {
+.put(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /dishes');
 })
-.delete(authenticate.verifyUser,(req, res, next) => {
+.delete(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     Dishes.remove({})
     .then((resp) => {
         res.statusCode = 200;
@@ -57,11 +57,11 @@ dishRouter.route('/:dishId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.post(authenticate.verifyUser,(req, res, next) => {
+.post(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     res.statusCode = 403;
     res.end('POST operation not supported on /dishes/'+ req.params.dishId);
 })
-.put(authenticate.verifyUser,(req, res, next) => {
+.put(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     Dishes.findByIdAndUpdate(req.params.dishId, {     //findbyidandupdate is the method of mongo
         $set: req.body                                 //dishid is the 1st parameter
     }, { new: true })                                  //just going to retrieve that from the req body . So will say, "new: true," so that this findbyId method will return the updated dish as a json string in the reply.
@@ -72,7 +72,7 @@ dishRouter.route('/:dishId')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(authenticate.verifyUser,(req, res, next) => {
+.delete(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     Dishes.findByIdAndRemove(req.params.dishId)
     .then((resp) => {
         res.statusCode = 200;
@@ -105,7 +105,7 @@ dishRouter.route('/:dishId/comments')
     .catch((err) => next(err));
 })
 //Insert author information  to the server based on the authenticity of the user
-.post(authenticate.verifyUser, (req, res, next) => {
+.post(authenticate.verifyUser,(req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null) {
@@ -136,7 +136,7 @@ dishRouter.route('/:dishId/comments')
     res.end('PUT operation not supported on /dishes/'
         + req.params.dishId + '/comments');
 })
-.delete(authenticate.verifyUser,(req, res, next) => {
+.delete(authenticate.verifyUser,authenticate.verifyAdmin,(req, res, next) => {
     Dishes.findById(req.params.dishId)
     .then((dish) => {
         if (dish != null ) //checks the dish and comments not null 
