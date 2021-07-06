@@ -16,7 +16,7 @@ var usersRouter = require('./routes/users');//express framework
 var dishRouter = require('./routes/dishRouter');
 var promotionRouter = require('./routes/promotionRouter');
 var leaderRouter = require('./routes/leaderRouter');
-
+const uploadRouter = require('./routes/uploadRouter');
 const mongoose = require('mongoose');
 const Dishes = require('./models/dishes');
 const { signedCookies } = require('cookie-parser');
@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));//enables us to serve st
 app.use('/dishes', dishRouter);
 app.use('/promotions', promotionRouter);
 app.use('/leaders', leaderRouter);
-
+app.use('/imageUpload',uploadRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
