@@ -12,7 +12,7 @@ promotionRouter.route('/')
 
 .get(cors.cors,(_req,res,next) => 
 {                                
-    Promotions.find({})
+    Promotions.find((req.query))
     .then((promotions) => 
     {
         res.statusCode = 200;

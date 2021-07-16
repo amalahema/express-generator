@@ -24,6 +24,7 @@ favoriteRouter.route('/')
 })
 
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
+    //Favorites.findOne({user: req.user._id})
     Favorites.findOne({user: req.user._id})
     .then((favorite) => {
         if (favorite) {
@@ -68,22 +69,43 @@ favoriteRouter.route('/')
 
 favoriteRouter.route('/:dishId')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
-.get(cors.corsWithOptions, authenticate.verifyUser, (req,res,next) => {
-    res.statusCode = 403;
-    res.end('GET operation not supported on /favorites/'+ req.params.dishId);
+.get(cors.cors, authenticate.verifyUser, (req,res,next) => {
+    Favorites.findOne({user: req.user._id})
+    .then((favorites) => {
+        if (!favorites) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            return res.json({"exists": false, "favorites": favorites});
+        }
+        else {
+            if (favorites.dishes.indexOf(req.params.dishId) < 0) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                return res.json({"exists": false, "favorites": favorites});
+            }
+            else {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                return res.json({"exists": true, "favorites": favorites});
+            }
+        }
+
+    }, (err) => next(err))
+    .catch((err) => next(err))
 })
+
 .post(cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Favorites.findOne({user: req.user._id})//particular user id mentioned in token ,find the particular user fav is already found in the favrites list 
     .then((favorite) => 
     {
         if (favorite) //if fav list is alreay there according the user id
         {           
-            if (favorite.dishes.indexOf(req.params.dishId) === -1) //The indexOf() method returns the first occurence of the given element(dish id) can be found in the array, if it is not present it means  -1,so the item is not already in the list it pushes and saved otherwise it goes to else part
+            if (favorite.dishes.indexOf(req.params.dishId) === -1) //The indexOf() method returns the first occurence of the given element(dish id) can be found in the list of array, if it is not present it means  -1,so the item is not already in the list it pushes and saved otherwise it goes to else part
             { 
             
-                favorite.dishes.push(req.params.dishId)
+                favorite.dishes.push(req.params.dishId)//push new favorite 
                 favorite.save()
-                //display the information
+                //Display the information
                  .then((favorite) => 
                 {   
                     console.log('Favorite Created ', favorite);

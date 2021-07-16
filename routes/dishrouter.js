@@ -12,7 +12,7 @@ dishRouter.use(bodyParser.json());
 dishRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors,(_req,res,next) => {                                //all the dishes to be returened as client's request
-    Dishes.find({})
+    Dishes.find(req.query)
     .populate('comments.author')//author field is populated with the dish details
     .then((dishes) => {
         res.statusCode = 200;

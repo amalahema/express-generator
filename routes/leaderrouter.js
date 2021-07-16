@@ -11,7 +11,8 @@ leaderRouter.route('/')
 .options(cors.corsWithOptions, (req, res) => { res.sendStatus(200); })
 .get(cors.cors,(_req,res,next) => 
 {                                
-    Leaders.find({})
+    //Leaders.find({})//replace the empty java script object to query for Angular
+    Leaders.find(req.query)//query mean http://localhost/dishes/id(featured = true)
     .then((leaders) => 
     {
         res.statusCode = 200;
